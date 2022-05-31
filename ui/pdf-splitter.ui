@@ -26,6 +26,9 @@
       <property name="selectionMode">
        <enum>QAbstractItemView::MultiSelection</enum>
       </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectItems</enum>
+      </property>
       <property name="iconSize">
        <size>
         <width>250</width>
@@ -245,7 +248,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QPushButton" name="btn_spli_sel">
+           <widget class="QPushButton" name="btn_split_sel">
             <property name="text">
              <string>Extract pages</string>
             </property>
