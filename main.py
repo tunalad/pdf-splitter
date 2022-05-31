@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
-from os import system, mkdir, path
+from ntpath import basename
+from os import system, mkdir, path, chdir
 
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDialog
@@ -19,6 +20,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi("ui/pdf-splitter.ui", self)
+
+        self.pdf_path = ""
+
         self.show()
 
         # groupboxes
@@ -33,10 +37,10 @@ class MainWindow(QMainWindow):
 
 
     def add_pages_item(self):
-        pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)")
+        self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)")
 
-        if pdf_path != "":
-            pdf = pdf_handler.file(pdf_path)
+        if self.pdf_path != "":
+            pdf = pdf_handler.file(self.pdf_path)
             pdf_pages = pdf.get_pages()
             pdf.to_images()
 
@@ -49,8 +53,35 @@ class MainWindow(QMainWindow):
 
     def get_selected_items(self):
         items = self.lw_pages.selectedIndexes()
-        for i in sorted(items):
-            print(i.row())
+        pdf = pdf_handler.file(self.pdf_path)
+        pdf_pages = pdf.get_pages()
+
+        pages_array = []
+
+        if self.cb_merge.isChecked():
+            for i in sorted(items):
+                pages_array.append(i.row())
+            pdf.extract_array(pdf_pages, pages_array)
+        else:
+            out_dir = basename(self.pdf_path).replace(".pdf", "") + " - [pdf-splitter]"
+
+            try:
+                mkdir(path.join(".", out_dir ))
+            except OSError as e:
+                print(e)
+
+            chdir(out_dir)
+
+            for i in sorted(items):
+                pages_array.append(i.row())
+
+            for p in pages_array:
+                pdf.extract_page(pdf_pages, p)
+
+            chdir("..")
+
+
+
 
 
 if __name__ == "__main__":
