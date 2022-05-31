@@ -21,8 +21,8 @@ class file():
 
     def to_images(self):
         pdf_icons = convert_from_path(self.pdf_path, 50)
-        for icon in pdf_icons:
-            icon.save(f"tempfiles/{icon}-out.jpeg", "JPEG")
+        for icon in range(len(pdf_icons)):
+            pdf_icons[icon].save(f"tempfiles/{icon}.jpeg", "JPEG")
 
     def extract_page(self, all_pages, page):
         pdf_writer = PdfFileWriter()
