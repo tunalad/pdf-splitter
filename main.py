@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+from tempfile import gettempdir
 from ntpath import basename
 from os import mkdir, path, chdir
 
@@ -8,8 +9,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDia
 
 import pdf_handler
 
-
 def temp_dir():
+
     try:
         mkdir(path.join(".", "tempfiles"))
     except OSError as e:
@@ -39,7 +40,6 @@ class MainWindow(QMainWindow):
         try:
             self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
                                                            "PDF Files (*.pdf);;All Files (*)")
-
             if self.pdf_path != "":
                 pdf = pdf_handler.file(self.pdf_path)
                 pdf_pages = pdf.get_pages()
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
 
                 self.lw_pages.clear()
                 for page in range(len(pdf_pages)):
-                    pic = QtGui.QIcon(f"tempfiles/{page}.jpeg")
+                    pic = QtGui.QIcon(f"{gettempdir()}/{page}.jpeg")
                     item = QListWidgetItem(pic, str(page))
                     self.lw_pages.addItem(item)
         except:

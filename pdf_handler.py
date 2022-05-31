@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from tempfile import TemporaryDirectory, gettempdir
 
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from pdf2image import convert_from_path
@@ -22,7 +23,7 @@ class file():
     def to_images(self):
         pdf_icons = convert_from_path(self.pdf_path, 50)
         for icon in range(len(pdf_icons)):
-            pdf_icons[icon].save(f"tempfiles/{icon}.jpeg", "JPEG")
+            pdf_icons[icon].save(f"{gettempdir()}/{icon}.jpeg", "JPEG")
 
     def extract_page(self, all_pages, page):
         pdf_writer = PdfFileWriter()
