@@ -50,66 +50,6 @@
       <property name="viewMode">
        <enum>QListView::IconMode</enum>
       </property>
-      <item>
-       <property name="text">
-        <string>1</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=210x357 at 0x7F80B2391D50&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>2</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=244x388 at 0x7F80B22F96C0&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>3</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=210x357 at 0x7F80B2393430&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>4</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=210x357 at 0x7F80B2392890&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>5</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=210x357 at 0x7F80B23933A0&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>6</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normalon>:/newPrefix/tempshyt/&lt;PIL.PpmImagePlugin.PpmImageFile image mode=RGB size=210x357 at 0x7F80B23931F0&gt;out.jpeg</normalon>
-        </iconset>
-       </property>
-      </item>
      </widget>
     </item>
     <item>
@@ -188,7 +128,7 @@
            <widget class="QWidget" name="widget" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="l_from">
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
@@ -210,7 +150,7 @@
            <widget class="QWidget" name="widget_2" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="l_to">
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
@@ -261,6 +201,9 @@
             </property>
             <property name="text">
              <string>Merge all into one file</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

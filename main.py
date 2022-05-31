@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 from ntpath import basename
-from os import system, mkdir, path, chdir
+from os import mkdir, path, chdir
 
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDialog
@@ -31,13 +31,13 @@ class MainWindow(QMainWindow):
 
         self.btn_open.clicked.connect(lambda: self.add_pages_item())
         self.btn_split_sel.clicked.connect(self.get_selected_items)
+        self.btn_split_range.clicked.connect(self.split_range)
 
-        # populating pages listwidget
         self.lw_pages.clear()
 
-
     def add_pages_item(self):
-        self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)")
+        self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
+                                                       "PDF Files (*.pdf);;All Files (*)")
 
         if self.pdf_path != "":
             pdf = pdf_handler.file(self.pdf_path)
@@ -49,7 +49,6 @@ class MainWindow(QMainWindow):
                 pic = QtGui.QIcon(f"tempfiles/{page}.jpeg")
                 item = QListWidgetItem(pic, str(page))
                 self.lw_pages.addItem(item)
-
 
     def get_selected_items(self):
         items = self.lw_pages.selectedIndexes()
@@ -66,7 +65,7 @@ class MainWindow(QMainWindow):
             out_dir = basename(self.pdf_path).replace(".pdf", "") + " - [pdf-splitter]"
 
             try:
-                mkdir(path.join(".", out_dir ))
+                mkdir(path.join(".", out_dir))
             except OSError as e:
                 print(e)
 
@@ -80,18 +79,36 @@ class MainWindow(QMainWindow):
 
             chdir("..")
 
+    def split_range(self):
+        try:
+            pdf = pdf_handler.file(self.pdf_path)
+            pdf_pages = pdf.get_pages()
+            pages_array = []
 
+            e_from = int(self.le_from.text())
+            e_to = int(self.le_to.text())
 
+            if not (e_from > e_to):
+                self.l_from.setStyleSheet("color: black")
+                self.l_to.setStyleSheet("color: black")
+                if e_from == e_to:
+                    pdf.extract_page(e_from)
+                else:
+                    for i in range(e_from, e_to + 1):
+                        print(i)
+                        pages_array.append(i)
+                    pdf.extract_array(pdf_pages, pages_array)
+
+            else:
+                self.l_from.setStyleSheet("color: red")
+                self.l_to.setStyleSheet("color: red")
+
+        except:
+            self.l_from.setStyleSheet("color: red")
+            self.l_to.setStyleSheet("color: red")
 
 
 if __name__ == "__main__":
-    # pdf = pdf_handler.file(pdf_path)
-    # pages = pdf.get_pages()
-
-    # pdf.to_images()
-    # pdf.extract_page(pages, 0)
-    # pdf.extract_array(pages, [0, 2, 4])
-
     app = QApplication(sys.argv)
     UIWindow = MainWindow()
     app.exec_()
