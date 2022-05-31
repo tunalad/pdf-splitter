@@ -29,13 +29,13 @@ class MainWindow(QMainWindow):
         self.gb_select.toggled.connect(lambda: self.gb_range.setChecked(False))
         self.gb_range.toggled.connect(lambda: self.gb_select.setChecked(False))
 
-        self.btn_open.clicked.connect(lambda: self.add_pages_item())
-        self.btn_split_sel.clicked.connect(self.get_selected_items)
+        self.btn_open.clicked.connect(lambda: self.add_pages())
+        self.btn_split_sel.clicked.connect(self.split_selection)
         self.btn_split_range.clicked.connect(self.split_range)
 
         self.lw_pages.clear()
 
-    def add_pages_item(self):
+    def add_pages(self):
         self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
                                                        "PDF Files (*.pdf);;All Files (*)")
 
@@ -50,7 +50,7 @@ class MainWindow(QMainWindow):
                 item = QListWidgetItem(pic, str(page))
                 self.lw_pages.addItem(item)
 
-    def get_selected_items(self):
+    def split_selection(self):
         items = self.lw_pages.selectedIndexes()
         pdf = pdf_handler.file(self.pdf_path)
         pdf_pages = pdf.get_pages()
