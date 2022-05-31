@@ -36,19 +36,22 @@ class MainWindow(QMainWindow):
         self.lw_pages.clear()
 
     def add_pages(self):
-        self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
-                                                       "PDF Files (*.pdf);;All Files (*)")
+        try:
+            self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
+                                                           "PDF Files (*.pdf);;All Files (*)")
 
-        if self.pdf_path != "":
-            pdf = pdf_handler.file(self.pdf_path)
-            pdf_pages = pdf.get_pages()
-            pdf.to_images()
+            if self.pdf_path != "":
+                pdf = pdf_handler.file(self.pdf_path)
+                pdf_pages = pdf.get_pages()
+                pdf.to_images()
 
-            self.lw_pages.clear()
-            for page in range(len(pdf_pages)):
-                pic = QtGui.QIcon(f"tempfiles/{page}.jpeg")
-                item = QListWidgetItem(pic, str(page))
-                self.lw_pages.addItem(item)
+                self.lw_pages.clear()
+                for page in range(len(pdf_pages)):
+                    pic = QtGui.QIcon(f"tempfiles/{page}.jpeg")
+                    item = QListWidgetItem(pic, str(page))
+                    self.lw_pages.addItem(item)
+        except:
+            QMessageBox.about(self, "pdf-splitter", "PDF file must be selected")
 
     def split_selection(self):
         items = self.lw_pages.selectedIndexes()
