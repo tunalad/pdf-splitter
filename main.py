@@ -4,7 +4,7 @@ from ntpath import basename
 from os import mkdir, path, chdir
 
 from PyQt5 import uic, QtGui
-from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDialog, QMessageBox
 
 import pdf_handler
 
@@ -79,6 +79,8 @@ class MainWindow(QMainWindow):
 
             chdir("..")
 
+        QMessageBox.about(self, "pdf-splitter", "PDF has been split")
+
     def split_range(self):
         try:
             pdf = pdf_handler.file(self.pdf_path)
@@ -102,6 +104,8 @@ class MainWindow(QMainWindow):
             else:
                 self.l_from.setStyleSheet("color: red")
                 self.l_to.setStyleSheet("color: red")
+
+            QMessageBox.about(self, "pdf-splitter", "PDF has been split")
 
         except:
             self.l_from.setStyleSheet("color: red")
