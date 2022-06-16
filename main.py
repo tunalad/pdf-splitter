@@ -9,13 +9,6 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDia
 
 import pdf_handler
 
-def temp_dir():
-
-    try:
-        mkdir(path.join(".", "tempfiles"))
-    except OSError as e:
-        print(e)
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -60,12 +53,13 @@ class MainWindow(QMainWindow):
 
         pages_array = []
 
-        if self.cb_merge.isChecked():
+        if self.cb_merge.isChecked():  # export into single file
             for i in sorted(items):
                 pages_array.append(i.row())
             pdf.extract_array(pdf_pages, pages_array)
-        else:
-            out_dir = basename(self.pdf_path).replace(".pdf", "") + " - [pdf-splitter]"
+        else:  # export pages into a folder
+            out_dir = path.dirname(self.pdf_path) + "/" + basename(self.pdf_path).replace(".pdf", "") + " - [pdf-splitter]"
+            print(out_dir)
 
             try:
                 mkdir(path.join(".", out_dir))
@@ -96,6 +90,7 @@ class MainWindow(QMainWindow):
             if not (e_from > e_to):
                 self.l_from.setStyleSheet("color: black")
                 self.l_to.setStyleSheet("color: black")
+
                 if e_from == e_to:
                     pdf.extract_page(e_from)
                 else:
