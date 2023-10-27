@@ -5,7 +5,13 @@ from ntpath import basename
 from os import mkdir, path, chdir
 
 from PyQt5 import uic, QtGui
-from PyQt5.QtWidgets import QMainWindow, QApplication, QListWidgetItem, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import (
+    QMainWindow,
+    QApplication,
+    QListWidgetItem,
+    QFileDialog,
+    QMessageBox,
+)
 
 import pdf_handler
 
@@ -31,8 +37,9 @@ class MainWindow(QMainWindow):
 
     def add_pages(self):
         try:
-            self.pdf_path, _ = QFileDialog.getOpenFileName(self, "Select a PDF file", "",
-                                                           "PDF Files (*.pdf);;All Files (*)")
+            self.pdf_path, _ = QFileDialog.getOpenFileName(
+                self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)"
+            )
             if self.pdf_path != "":
                 pdf = pdf_handler.file(self.pdf_path)
                 pdf_pages = pdf.get_pages()
@@ -43,8 +50,9 @@ class MainWindow(QMainWindow):
                     pic = QtGui.QIcon(f"{gettempdir()}/{page}.jpeg")
                     item = QListWidgetItem(pic, str(page))
                     self.lw_pages.addItem(item)
-        except:
+        except Exception as e:
             QMessageBox.about(self, "pdf-splitter", "PDF file must be selected")
+            print(e)
 
     def split_selection(self):
         items = self.lw_pages.selectedIndexes()
@@ -58,7 +66,12 @@ class MainWindow(QMainWindow):
                 pages_array.append(i.row())
             pdf.extract_array(pdf_pages, pages_array)
         else:  # export pages into a folder
-            out_dir = path.dirname(self.pdf_path) + "/" + basename(self.pdf_path).replace(".pdf", "") + " - [pdf-splitter]"
+            out_dir = (
+                path.dirname(self.pdf_path)
+                + "/"
+                + basename(self.pdf_path).replace(".pdf", "")
+                + " - [pdf-splitter]"
+            )
             print(out_dir)
 
             try:
