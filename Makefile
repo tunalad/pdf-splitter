@@ -1,4 +1,4 @@
-PACKAGE_NAME = neft
+PACKAGE_NAME = pdf-splitter
 BINARY_NAME = $(PACKAGE_NAME)
 INSTALL_DIR = $(HOME)/.local/bin
 VENV_DIR = venv
