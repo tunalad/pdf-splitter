@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+from pprint import pprint
 from tempfile import gettempdir
 from ntpath import basename
 from os import mkdir, path, chdir
@@ -11,6 +12,7 @@ from PyQt5.QtWidgets import (
     QListWidgetItem,
     QFileDialog,
     QMessageBox,
+    QProgressBar,
 )
 
 import pdf_handler
@@ -40,19 +42,39 @@ class MainWindow(QMainWindow):
             self.pdf_path, _ = QFileDialog.getOpenFileName(
                 self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)"
             )
+
             if self.pdf_path != "":
                 pdf = pdf_handler.file(self.pdf_path)
                 pdf_pages = pdf.get_pages()
-                pdf.to_images()
+
+                # progress bar
+                self.progressbar = QProgressBar()
+                self.progressbar.setFormat("Loading the PDF file %p%")
+                self.progressbar.setRange(0, len(pdf_pages) * 2)
+                self.statusbar.addWidget(self.progressbar)
+
+                # signal
+                pdf.progress_signal.connect(
+                    lambda: self.progressbar.setValue(self.progressbar.value() + 1)
+                )
+
+                pdf.to_images()  # halts program here
 
                 self.lw_pages.clear()
                 for page in range(len(pdf_pages)):
                     pic = QtGui.QIcon(f"{gettempdir()}/{page}.jpeg")
                     item = QListWidgetItem(pic, str(page))
                     self.lw_pages.addItem(item)
+
+                    self.progressbar.setValue(self.progressbar.value() + 1)
+
+                self.statusbar.removeWidget(self.progressbar)
+                self.statusbar.showMessage("Document loaded")
         except Exception as e:
-            QMessageBox.about(self, "pdf-splitter", "PDF file must be selected")
-            print(e)
+            if str(e).startswith("PDF starts with"):
+                QMessageBox.about(self, "pdf-splitter", "PDF file must be selected")
+            else:
+                QMessageBox.about(self, "pdf-splitter", str(e))
 
     def split_selection(self):
         items = self.lw_pages.selectedIndexes()

@@ -1,11 +1,15 @@
 from tempfile import TemporaryDirectory, gettempdir
 from os import path
 from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyQt5.QtCore import QObject, pyqtSignal
 import fitz
 
 
-class file:
+class file(QObject):
+    progress_signal = pyqtSignal()
+
     def __init__(self, pdf_path):
+        super().__init__()
         self.pdf_path = pdf_path
         self.pdf_in = open(pdf_path, "rb")
         self.pdf_reader = PdfFileReader(self.pdf_in)
@@ -24,6 +28,7 @@ class file:
                 matrix=fitz.Matrix(resolution / 72, resolution / 72)
             )
             image.save(f"{gettempdir()}/{page_num}.jpeg")
+            self.progress_signal.emit()
 
     def extract_page(self, all_pages, page):
         file_name = path.basename(self.pdf_path).replace(".pdf", "")
