@@ -1,5 +1,5 @@
 from tempfile import TemporaryDirectory, gettempdir
-from os import path
+from os import path, makedirs
 from PyPDF2 import PdfFileReader, PdfFileWriter
 from PyQt5.QtCore import QObject, pyqtSignal
 import fitz
@@ -22,6 +22,11 @@ class file(QObject):
 
     def to_images(self, resolution=300):
         pdf_document = fitz.open(self.pdf_path)
+
+        # create temp dir
+        if not path.exists(f"{gettempdir()}/pdf-splitter-py"):
+            makedirs(f"{gettempdir()}/pdf-splitter-py")
+
         for page_num in range(pdf_document.page_count):
             page = pdf_document.load_page(page_num)
             image = page.get_pixmap(
