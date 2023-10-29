@@ -27,7 +27,7 @@ class file(QObject):
             image = page.get_pixmap(
                 matrix=fitz.Matrix(resolution / 72, resolution / 72)
             )
-            image.save(f"{gettempdir()}/pdf-splitter-py/{page}.jpeg")
+            image.save(f"{gettempdir()}/pdf-splitter-py/{page_num}.jpeg")
             self.progress_signal.emit()
 
     def extract_page(self, all_pages, page):
