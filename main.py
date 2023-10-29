@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
 
                 self.lw_pages.clear()
                 for page in range(len(pdf_pages)):
-                    pic = QtGui.QIcon(f"{gettempdir()}/{page}.jpeg")
+                    pic = QtGui.QIcon(f"{gettempdir()}/pdf-splitter-py/{page}.jpeg")
                     item = QListWidgetItem(pic, str(page))
                     self.lw_pages.addItem(item)
 
