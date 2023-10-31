@@ -77,6 +77,7 @@ class MainWindow(QMainWindow):
                 QMessageBox.about(self, "pdf-splitter", str(e))
 
     def split_selection(self):
+        out_path = QFileDialog.getExistingDirectory(self, "Select output destination")
         items = self.lw_pages.selectedIndexes()
         pdf = pdf_handler.file(self.pdf_path)
         pdf_pages = pdf.get_pages()
@@ -86,10 +87,11 @@ class MainWindow(QMainWindow):
         if self.cb_merge.isChecked():  # export into single file
             for i in sorted(items):
                 pages_array.append(i.row())
-            pdf.extract_array(pdf_pages, pages_array)
+            pdf.extract_array(pdf_pages, pages_array, out_path)
         else:  # export pages into a folder
             out_dir = (
-                path.dirname(self.pdf_path)
+                out_path
+                or path.dirname(self.pdf_path)
                 + "/"
                 + basename(self.pdf_path).replace(".pdf", "")
                 + " - [pdf-splitter]"
@@ -111,10 +113,17 @@ class MainWindow(QMainWindow):
 
             chdir("..")
 
-        QMessageBox.about(self, "pdf-splitter", "PDF has been split")
+        QMessageBox.about(
+            self,
+            "pdf-splitter",
+            f"PDF has been split. <br>The output file is located at: {out_path}",
+        )
 
     def split_range(self):
         try:
+            out_path = QFileDialog.getExistingDirectory(
+                self, "Select output destination"
+            )
             pdf = pdf_handler.file(self.pdf_path)
             pdf_pages = pdf.get_pages()
             pages_array = []
@@ -130,15 +139,18 @@ class MainWindow(QMainWindow):
                     pdf.extract_page(e_from)
                 else:
                     for i in range(e_from, e_to + 1):
-                        print(i)
                         pages_array.append(i)
-                    pdf.extract_array(pdf_pages, pages_array)
+                    pdf.extract_array(pdf_pages, pages_array, out_path)
 
             else:
                 self.l_from.setStyleSheet("color: red")
                 self.l_to.setStyleSheet("color: red")
 
-            QMessageBox.about(self, "pdf-splitter", "PDF has been split")
+            QMessageBox.about(
+                self,
+                "pdf-splitter",
+                f"PDF has been split. <br>The output file is located at: {out_path}",
+            )
 
         except:
             self.l_from.setStyleSheet("color: red")

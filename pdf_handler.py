@@ -35,20 +35,30 @@ class file(QObject):
             image.save(f"{gettempdir()}/pdf-splitter-py/{page_num}.jpeg")
             self.progress_signal.emit()
 
-    def extract_page(self, all_pages, page):
+    def extract_page(self, all_pages, page, out_path=None):
         file_name = path.basename(self.pdf_path).replace(".pdf", "")
         pdf_writer = PdfFileWriter()
         pdf_writer.addPage(all_pages[page])
-        pdf_out = open(f"{file_name}-page-{page}-out.pdf", "wb")
+        if out_path:
+            pdf_out = open(out_path + f"/{file_name}-page-{page}-out.pdf", "wb")
+        else:
+            pdf_out = open(f"{file_name}-page-{page}-out.pdf", "wb")
         pdf_writer.write(pdf_out)
         pdf_out.close()
 
-    def extract_array(self, all_pages, new_pages):
+    def extract_array(self, all_pages, new_pages, out_path=None):
         file_name = path.basename(self.pdf_path).replace(".pdf", "")
         file_dir = path.dirname(self.pdf_path)
         pdf_writer = PdfFileWriter()
         for i in new_pages:
             pdf_writer.addPage(all_pages[i])
-        pdf_out = open(file_dir + f"/{file_name}-{len(new_pages)}-pages-out.pdf", "wb")
+        if out_path:
+            pdf_out = open(
+                out_path + f"/{file_name}-{len(new_pages)}-pages-out.pdf", "wb"
+            )
+        else:
+            pdf_out = open(
+                file_dir + f"/{file_name}-{len(new_pages)}-pages-out.pdf", "wb"
+            )
         pdf_writer.write(pdf_out)
         pdf_out.close()
