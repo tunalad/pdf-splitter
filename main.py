@@ -9,6 +9,7 @@ from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (
     QMainWindow,
     QApplication,
+    QListWidget,
     QListWidgetItem,
     QFileDialog,
     QMessageBox,
@@ -31,12 +32,40 @@ class MainWindow(QMainWindow):
         self.gb_select.toggled.connect(self.toggle_checkboxes)
         self.gb_range.toggled.connect(self.toggle_checkboxes)
 
+        # buttons
         self.btn_open.clicked.connect(lambda: self.add_pages())
         self.btn_split_sel.clicked.connect(self.split_selection)
         self.btn_split_range.clicked.connect(self.split_range)
 
+        # list widget drag & drop
+        self.lw_pages.setAcceptDrops(True)
+        self.lw_pages.dragEnterEvent = self.dragEnterEvent
+        self.lw_pages.dragLeaveEvent = self.dragLeaveEvent
+        self.lw_pages.dragMoveEvent = self.dragMoveEvent
+        self.lw_pages.dropEvent = self.dropEvent
+
+        # clear list
         self.lw_pages.clear()
 
+    # DRAG & DROP
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasText():
+            event.accept()
+            self.lw_pages.setStyleSheet("background-color: rgb(131, 131, 131);")
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        self.lw_pages.setStyleSheet("background-color: rgb(171, 171, 171);")
+
+    def dragMoveEvent(self, event):
+        event.accept() if event.mimeData().hasText() else event.ignore()
+
+    def dropEvent(self, event):
+        if event.mimeData().hasText():
+            self.add_pages(event.mimeData().urls()[0].toLocalFile())
+
+    # CHECKBOXES
     def toggle_checkboxes(self, state):
         if self.gb_select.isChecked() and self.gb_range.isChecked():
             if self.sender() == self.gb_select:
@@ -44,11 +73,15 @@ class MainWindow(QMainWindow):
             else:
                 self.gb_select.setChecked(False)
 
-    def add_pages(self):
+    # PDF HANDLING
+    def add_pages(self, drop_path=None):
         try:
-            self.pdf_path, _ = QFileDialog.getOpenFileName(
-                self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)"
-            )
+            if not drop_path:
+                self.pdf_path, _ = QFileDialog.getOpenFileName(
+                    self, "Select a PDF file", "", "PDF Files (*.pdf);;All Files (*)"
+                )
+            else:
+                self.pdf_path = drop_path
 
             if self.pdf_path != "":
                 pdf = pdf_handler.file(self.pdf_path)
