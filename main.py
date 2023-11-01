@@ -28,14 +28,21 @@ class MainWindow(QMainWindow):
         self.show()
 
         # groupboxes
-        self.gb_select.toggled.connect(lambda: self.gb_range.setChecked(False))
-        self.gb_range.toggled.connect(lambda: self.gb_select.setChecked(False))
+        self.gb_select.toggled.connect(self.toggle_checkboxes)
+        self.gb_range.toggled.connect(self.toggle_checkboxes)
 
         self.btn_open.clicked.connect(lambda: self.add_pages())
         self.btn_split_sel.clicked.connect(self.split_selection)
         self.btn_split_range.clicked.connect(self.split_range)
 
         self.lw_pages.clear()
+
+    def toggle_checkboxes(self, state):
+        if self.gb_select.isChecked() and self.gb_range.isChecked():
+            if self.sender() == self.gb_select:
+                self.gb_range.setChecked(False)
+            else:
+                self.gb_select.setChecked(False)
 
     def add_pages(self):
         try:
@@ -58,7 +65,7 @@ class MainWindow(QMainWindow):
                     lambda: self.progressbar.setValue(self.progressbar.value() + 1)
                 )
 
-                pdf.to_images()  # halts program here
+                pdf.to_images()
 
                 self.lw_pages.clear()
                 for page in range(len(pdf_pages)):
@@ -69,12 +76,12 @@ class MainWindow(QMainWindow):
                     self.progressbar.setValue(self.progressbar.value() + 1)
 
                 self.statusbar.removeWidget(self.progressbar)
-                self.statusbar.showMessage("Document loaded")
+                QMessageBox.information(self, "pdf-splitter", "PDF loaded")
         except Exception as e:
             if str(e).startswith("PDF starts with"):
-                QMessageBox.about(self, "pdf-splitter", "PDF file must be selected")
+                QMessageBox.warning(self, "pdf-splitter", "PDF file must be selected")
             else:
-                QMessageBox.about(self, "pdf-splitter", str(e))
+                QMessageBox.critical(self, "pdf-splitter", str(e))
 
     def split_selection(self):
         out_path = QFileDialog.getExistingDirectory(self, "Select output destination")
