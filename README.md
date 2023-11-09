@@ -6,7 +6,15 @@ Originally developed as a project for the SCS (Specialized Computer Systems) cou
 
 ![Dashboard with a document loaded](https://i.imgur.com/8xZYAGX.png)
 
-## 1. Install
+## 1. Dependencies
+
+Pip packages that this tool uses aren't required to be installed; that will be handled during the build process inside a virtual environment.
+
+-   `python`
+-   `qt5-base` (or whatever the Qt's base package is called for your distro)
+-   `patchelf` (required when building the binary)
+
+## 2. Install
 
 Binary `pdf-splitter` will be located at `~/.local/bin/`
 
@@ -15,11 +23,3 @@ git clone https://github.com/tunalad/pdf-splitter.git
 cd pdf-splitter
 make install
 ```
-
-Pip packages that this tool uses aren't required to be installed; that will be handled during the build process inside a virtual environment.
-
-## 2. Dependencies
-
--   `python`
--   `qt5-base` (or whatever the Qt's base package is called for your distro)
--   `patchelf` (required when building the binary)
