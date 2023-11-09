@@ -23,6 +23,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi("ui/pdf-splitter.ui", self)
+        self.setMinimumSize(854, 480)
 
         self.pdf_path = ""
 
