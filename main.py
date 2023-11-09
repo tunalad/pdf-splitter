@@ -118,6 +118,9 @@ class MainWindow(QMainWindow):
 
     def split_selection(self):
         out_path = QFileDialog.getExistingDirectory(self, "Select output destination")
+        if out_path == "" or self.pdf_path == "":
+            return None
+
         items = self.lw_pages.selectedIndexes()
         pdf = pdf_handler.file(self.pdf_path)
         pdf_pages = pdf.get_pages()
