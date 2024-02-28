@@ -21,6 +21,7 @@ class file(QObject):
         return pdf_pages
 
     def to_images(self, resolution=300):
+
         pdf_document = fitz.open(self.pdf_path)
 
         # create temp dir

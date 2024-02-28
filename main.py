@@ -4,6 +4,7 @@ from pprint import pprint
 from tempfile import gettempdir
 from ntpath import basename
 from os import mkdir, path, chdir
+import threading
 
 from PyQt5 import uic, QtGui
 from PyQt5.QtWidgets import (
@@ -34,7 +35,10 @@ class MainWindow(QMainWindow):
         self.gb_range.toggled.connect(self.toggle_checkboxes)
 
         # buttons
-        self.btn_open.clicked.connect(lambda: self.add_pages())
+        # self.btn_open.clicked.connect(lambda: self.add_pages())
+        self.btn_open.clicked.connect(
+            lambda: threading.Thread(target=self.add_pages).start()
+        )
         self.btn_split_sel.clicked.connect(self.split_selection)
         self.btn_split_range.clicked.connect(self.split_range)
 
